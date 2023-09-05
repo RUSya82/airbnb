@@ -116,7 +116,7 @@ describe('AppController (e2e)', () => {
                 expect(body).toBeDefined();
             })
     });
-    it('/schedule/findRoomByDate/ (GET) - success', async () => {
+    it('/schedule/findRoomByDate/ (GET) - failed', async () => {
         return request(app.getHttpServer())
             .get('/schedule/findRoomByDate/')
             .send(testDto)
