@@ -1,17 +1,16 @@
-import {ScheduleService} from "./schedule.service";
+import {ScheduleService} from './schedule.service';
 import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post} from '@nestjs/common';
-import {CreateScheduleDto} from "./dto/create-schedule.dto";
-import {ROOM_IS_BOOKED, SCHEDULE_NOT_FOUND} from "./constants";
+import {CreateScheduleDto} from './dto/create-schedule.dto';
+import {ROOM_IS_BOOKED, SCHEDULE_NOT_FOUND} from './constants';
 
 @Controller('schedule')
 export class ScheduleController {
-    constructor(private readonly scheduleService: ScheduleService) {
-    }
+    constructor(private readonly scheduleService: ScheduleService) {}
 
     @Post('create')
     async create(@Body() dto: CreateScheduleDto) {
         const res = await this.scheduleService.findRoomByDate(dto);
-        if(res){
+        if (res) {
             throw new HttpException(ROOM_IS_BOOKED, HttpStatus.CONFLICT);
         }
         return this.scheduleService.create(dto);
@@ -39,14 +38,14 @@ export class ScheduleController {
     @Patch(':scheduleId')
     async update(@Param('scheduleId') scheduleId: string, @Body() dto: CreateScheduleDto) {
         const updateDoc = await this.scheduleService.update(scheduleId, dto);
-        if(!updateDoc) {
+        if (!updateDoc) {
             throw new HttpException(SCHEDULE_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
         return updateDoc;
     }
 
     @Get('byRoom/:roomId')
-    async getByRoomId(@Param('roomId') roomId: string){
+    async getByRoomId(@Param('roomId') roomId: string) {
         return this.scheduleService.findByRoomID(roomId);
     }
 
@@ -56,7 +55,7 @@ export class ScheduleController {
     }
 
     @Get('byDate/:date')
-    async getAllByDate(@Param('date') date: string){
+    async getAllByDate(@Param('date') date: string) {
         return this.scheduleService.getAllByDate(date);
     }
 }

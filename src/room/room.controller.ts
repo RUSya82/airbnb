@@ -1,12 +1,11 @@
 import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post} from '@nestjs/common';
-import {RoomService} from "./room.service";
-import {CreateRoomDto} from "./dto/create-room.dto";
-import {ROOM_NOT_FOUND} from "./constants";
+import {RoomService} from './room.service';
+import {CreateRoomDto} from './dto/create-room.dto';
+import {ROOM_NOT_FOUND} from './constants';
 
 @Controller('room')
 export class RoomController {
-    constructor(private readonly roomService: RoomService) {
-    }
+    constructor(private readonly roomService: RoomService) {}
 
     @Post('create')
     async create(@Body() dto: CreateRoomDto) {
@@ -35,10 +34,9 @@ export class RoomController {
     @Patch(':roomId')
     async updateRoom(@Param('roomId') roomId: string, @Body() dto: CreateRoomDto) {
         const updateDoc = await this.roomService.update(roomId, dto);
-        if(!updateDoc) {
+        if (!updateDoc) {
             throw new HttpException(ROOM_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
         return updateDoc;
     }
-
 }

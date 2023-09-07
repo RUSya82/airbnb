@@ -1,4 +1,4 @@
-import {RoomTypes} from "../room.model/room.model";
+import {RoomTypes} from '../room.model/room.model';
 
 export class CreateRoomDto {
     roomNumber: string;

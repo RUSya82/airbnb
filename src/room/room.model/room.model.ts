@@ -1,13 +1,13 @@
-import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {HydratedDocument} from "mongoose";
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import {HydratedDocument} from 'mongoose';
 
 export type RoomDocument = HydratedDocument<RoomModel>;
 
-export enum RoomTypes  {
+export enum RoomTypes {
     standard = 'Standard',
     standard_plus = 'Standard+',
     lux = 'LUX',
-    extra_lux = 'Extra LUX'
+    extra_lux = 'Extra LUX',
 }
 
 @Schema({timestamps: true})

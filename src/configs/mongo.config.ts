@@ -1,9 +1,9 @@
-import { ConfigService } from '@nestjs/config';
-import {MongooseModuleFactoryOptions} from "@nestjs/mongoose";
+import {ConfigService} from '@nestjs/config';
+import {MongooseModuleFactoryOptions} from '@nestjs/mongoose';
 
 export const getMongoConfig = async (configService: ConfigService): Promise<MongooseModuleFactoryOptions> => {
     return {
-        uri: getMongoString(configService)
+        uri: getMongoString(configService),
     };
 };
 
@@ -21,5 +21,5 @@ const getMongoString = (configService: ConfigService) =>
 
 const getMongoOptions = () => ({
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 });
