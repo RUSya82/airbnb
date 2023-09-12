@@ -1,7 +1,8 @@
 import {ScheduleService} from './schedule.service';
 import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post} from '@nestjs/common';
 import {CreateScheduleDto} from './dto/create-schedule.dto';
-import {ROOM_IS_BOOKED, SCHEDULE_NOT_FOUND} from './constants';
+import {ROOM_IS_BOOKED, SCHEDULE_NOT_FOUND} from './schedule-constants';
+import { UpdateScheduleDto } from './dto/update-schedule.dto';
 
 @Controller('schedule')
 export class ScheduleController {
@@ -9,8 +10,10 @@ export class ScheduleController {
 
     @Post('create')
     async create(@Body() dto: CreateScheduleDto) {
-        const res = await this.scheduleService.findRoomByDate(dto);
-        if (res) {
+        const {roomId, dateFrom, dateTo} = dto;
+        const res = await this.scheduleService.bookingsByRoomByDates(roomId, dateFrom, dateTo);
+        console.log( res);
+        if (res.length > 0) {
             throw new HttpException(ROOM_IS_BOOKED, HttpStatus.CONFLICT);
         }
         return this.scheduleService.create(dto);
@@ -36,8 +39,8 @@ export class ScheduleController {
     }
 
     @Patch(':scheduleId')
-    async update(@Param('scheduleId') scheduleId: string, @Body() dto: CreateScheduleDto) {
-        const updateDoc = await this.scheduleService.update(scheduleId, dto);
+    async update(@Param('scheduleId') scheduleId: string, @Body() updateDto: UpdateScheduleDto) {
+        const updateDoc = await this.scheduleService.update(scheduleId, updateDto);
         if (!updateDoc) {
             throw new HttpException(SCHEDULE_NOT_FOUND, HttpStatus.NOT_FOUND);
         }

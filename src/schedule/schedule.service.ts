@@ -3,6 +3,7 @@ import {InjectModel} from '@nestjs/mongoose';
 import {Model, Types} from 'mongoose';
 import {ScheduleDocument, ScheduleModel} from './schedule.model/schedule.model';
 import {CreateScheduleDto} from './dto/create-schedule.dto';
+import {UpdateScheduleDto} from './dto/update-schedule.dto';
 
 @Injectable()
 export class ScheduleService {
@@ -16,7 +17,7 @@ export class ScheduleService {
         return this.scheduleModel.findByIdAndDelete(id);
     }
 
-    async update(scheduleId: string, dto: CreateScheduleDto): Promise<ScheduleModel | null> {
+    async update(scheduleId: string, dto: UpdateScheduleDto): Promise<ScheduleModel | null> {
         return this.scheduleModel
             .findByIdAndUpdate(new Types.ObjectId(scheduleId), dto, {
                 returnDocument: 'after',
@@ -39,6 +40,28 @@ export class ScheduleService {
 
     async findRoomByDate(dto: CreateScheduleDto): Promise<ScheduleModel | null> {
         return this.scheduleModel.findOne(dto).exec();
+    }
+
+    async bookingsByRoomByDates(roomId: string, from: string, to: string): Promise<ScheduleModel[]> {
+        const conditions = {
+            roomId,
+            $or: [
+                {
+                    $or: [
+                        {
+                            dateFrom: {$gte: from, $lte: to},
+                        },
+                        {
+                            dateTo: {$gte: from, $lte: to},
+                        },
+                    ],
+                },
+                {
+                    $and: [{dateFrom: {$lte: from}}, {dateTo: {$gte: to}}],
+                },
+            ],
+        };
+        return this.scheduleModel.find(conditions).exec();
     }
 
     async getAllByDate(date: string): Promise<ScheduleModel[]> {

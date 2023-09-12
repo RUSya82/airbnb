@@ -3,7 +3,6 @@ import {ScheduleController} from './schedule.controller';
 import {ScheduleService} from './schedule.service';
 import {MongooseModule} from '@nestjs/mongoose';
 import {ScheduleModel, ScheduleSchema} from './schedule.model/schedule.model';
-import {RoomModel, RoomSchema} from '../room/room.model/room.model';
 
 @Module({
     controllers: [ScheduleController],
@@ -13,10 +12,6 @@ import {RoomModel, RoomSchema} from '../room/room.model/room.model';
             {
                 name: ScheduleModel.name,
                 schema: ScheduleSchema,
-            },
-            {
-                name: RoomModel.name,
-                schema: RoomSchema,
             },
         ]),
     ],

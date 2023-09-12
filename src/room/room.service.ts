@@ -3,6 +3,7 @@ import {InjectModel} from '@nestjs/mongoose';
 import {RoomDocument, RoomModel} from './room.model/room.model';
 import {Model, Types} from 'mongoose';
 import {CreateRoomDto} from './dto/create-room.dto';
+import { UpdateRoomDto } from './dto/update-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -12,23 +13,22 @@ export class RoomService {
         return this.roomModel.create(dto);
     }
 
-    async delete(id: string): Promise<RoomModel | null> {
-        return this.roomModel.findByIdAndDelete(id).exec();
+    async delete(roomId: string): Promise<RoomModel | null> {
+        return this.roomModel.findByIdAndDelete(roomId).exec();
     }
 
     async findRoomById(roomId: string): Promise<RoomModel | null> {
         return this.roomModel.findById(roomId).exec();
     }
 
-    async update(roomId: string, dto: CreateRoomDto): Promise<RoomModel | null> {
+    async update(roomId: string, updateData: UpdateRoomDto): Promise<RoomModel | null> {
         return this.roomModel
-            .findByIdAndUpdate(new Types.ObjectId(roomId), dto, {
+            .findByIdAndUpdate(new Types.ObjectId(roomId), updateData, {
                 returnDocument: 'after',
                 lean: true,
             })
             .exec();
     }
-
     async getAll(): Promise<RoomModel[]> {
         return this.roomModel.find({}).exec();
     }

@@ -7,7 +7,10 @@ export type ScheduleDocument = HydratedDocument<ScheduleModel>;
 @Schema({timestamps: true})
 export class ScheduleModel {
     @Prop()
-    day: string;
+    dateFrom: Date;
+
+    @Prop()
+    dateTo: Date;
 
     @Prop({type: MSchema.Types.ObjectId, ref: RoomModel.name})
     roomId: Types.ObjectId;
