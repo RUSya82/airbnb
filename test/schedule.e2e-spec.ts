@@ -75,27 +75,13 @@ describe('AppController (e2e)', () => {
                 message: ROOM_IS_BOOKED,
             });
     });
-    //
-    /**** test FIND BY ID room ****/
-    it('/schedule/findById/:roomId (GET) - success', async () => {
-        return request(app.getHttpServer())
-            .get('/schedule/findById/' + createdId)
-            .expect(200)
-            .then(({body}: request.Response) => {
-                expect(body).toBeDefined();
-            });
-    });
-    it('/schedule/findById/:roomId (GET) - failed', async () => {
-        return request(app.getHttpServer())
-            .get('/schedule/findById/' + new Types.ObjectId().toHexString())
-            .expect(200, {});
-    });
-    //
-    // /**** test GET All room ****/
+
+    /**** test GET All room ****/
     it('/schedule/getAll - success', async () => {
         return request(app.getHttpServer())
             .get('/schedule/getAll/')
             .expect(200)
+            .send({roomId})
             .then(({body}: request.Response) => {
                 expect(body.length).toBeGreaterThan(0);
             });
@@ -118,22 +104,7 @@ describe('AppController (e2e)', () => {
                 message: SCHEDULE_NOT_FOUND,
             });
     });
-    it('/schedule/byRoom/:roomId (GET) - success', async () => {
-        return request(app.getHttpServer())
-            .get('/schedule/byRoom/' + roomId)
-            .expect(200)
-            .then(({body}: request.Response) => {
-                expect(body.length).toBeGreaterThan(0);
-            });
-    });
-    it('/schedule/byRoom/:roomId (GET) - failed', async () => {
-        return request(app.getHttpServer())
-            .get('/schedule/byRoom/' + new Types.ObjectId().toHexString())
-            .expect(200)
-            .then(({body}: request.Response) => {
-                expect(body.length).toBe(0);
-            });
-    });
+
 
     /**** test DELETE room ****/
     it('/schedule/:id (DELETE) - success', () => {

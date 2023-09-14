@@ -4,6 +4,7 @@ import {Model, Types} from 'mongoose';
 import {ScheduleDocument, ScheduleModel} from './schedule.model/schedule.model';
 import {CreateScheduleDto} from './dto/create-schedule.dto';
 import {UpdateScheduleDto} from './dto/update-schedule.dto';
+import {FindScheduleDto} from './dto/find-schedule.dto';
 
 @Injectable()
 export class ScheduleService {
@@ -14,7 +15,7 @@ export class ScheduleService {
     }
 
     async delete(id: string): Promise<ScheduleModel | null> {
-        return this.scheduleModel.findByIdAndDelete(id);
+        return this.scheduleModel.findByIdAndDelete(new Types.ObjectId(id));
     }
 
     async update(scheduleId: string, dto: UpdateScheduleDto): Promise<ScheduleModel | null> {
@@ -26,25 +27,13 @@ export class ScheduleService {
             .exec();
     }
 
-    async findById(scheduleId: string): Promise<ScheduleModel | null> {
-        return this.scheduleModel.findById(scheduleId).exec();
-    }
-
-    async getAll(): Promise<ScheduleModel[]> {
-        return this.scheduleModel.find({}).exec();
-    }
-
-    async findByRoomID(roomId: string): Promise<ScheduleModel[]> {
-        return this.scheduleModel.find({roomId: new Types.ObjectId(roomId)}).exec();
-    }
-
-    async findRoomByDate(dto: CreateScheduleDto): Promise<ScheduleModel | null> {
-        return this.scheduleModel.findOne(dto).exec();
+    async getAll(conditions: FindScheduleDto, limit = 100): Promise<ScheduleModel[]> {
+        return this.scheduleModel.find(conditions).limit(limit).exec();
     }
 
     async bookingsByRoomByDates(roomId: string, from: string, to: string): Promise<ScheduleModel[]> {
         const conditions = {
-            roomId,
+            roomId: new Types.ObjectId(roomId),
             $or: [
                 {
                     $or: [
@@ -64,7 +53,4 @@ export class ScheduleService {
         return this.scheduleModel.find(conditions).exec();
     }
 
-    async getAllByDate(date: string): Promise<ScheduleModel[]> {
-        return this.scheduleModel.find({day: date}).exec();
-    }
 }

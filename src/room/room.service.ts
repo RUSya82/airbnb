@@ -3,11 +3,14 @@ import {InjectModel} from '@nestjs/mongoose';
 import {RoomDocument, RoomModel} from './room.model/room.model';
 import {Model, Types} from 'mongoose';
 import {CreateRoomDto} from './dto/create-room.dto';
-import { UpdateRoomDto } from './dto/update-room.dto';
+import {UpdateRoomDto} from './dto/update-room.dto';
+import {FindRoomDto} from './dto/find-room.dto';
+import {ConfigService} from '@nestjs/config';
 
 @Injectable()
 export class RoomService {
-    constructor(@InjectModel(RoomModel.name) private roomModel: Model<RoomDocument>) {}
+    constructor(@InjectModel(RoomModel.name) private roomModel: Model<RoomDocument>, configService: ConfigService) {}
+
 
     async createRoom(dto: CreateRoomDto): Promise<RoomModel> {
         return this.roomModel.create(dto);
@@ -29,7 +32,8 @@ export class RoomService {
             })
             .exec();
     }
-    async getAll(): Promise<RoomModel[]> {
-        return this.roomModel.find({}).exec();
+
+    async getAll(conditions: FindRoomDto, limit = 100): Promise<RoomModel[]> {
+        return this.roomModel.find(conditions).limit(limit).exec();
     }
 }

@@ -1,8 +1,9 @@
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Request} from '@nestjs/common';
 import {RoomService} from './room.service';
 import {CreateRoomDto} from './dto/create-room.dto';
 import {ROOM_NOT_FOUND} from './room-constants';
-import { UpdateRoomDto } from './dto/update-room.dto';
+import {UpdateRoomDto} from './dto/update-room.dto';
+import {FindRoomDto} from './dto/find-room.dto';
 
 @Controller('room')
 export class RoomController {
@@ -22,9 +23,9 @@ export class RoomController {
         return deletedDocument;
     }
 
-    @Get('getAll')
-    async getAll() {
-        return this.roomService.getAll();
+    @Get('getAll/:limit?')
+    async getAll(@Body() conditions: FindRoomDto, @Param('limit') limit) {
+        return this.roomService.getAll(conditions, limit);
     }
 
     @Get('findById/:roomId')

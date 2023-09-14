@@ -3,6 +3,8 @@ import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, 
 import {CreateScheduleDto} from './dto/create-schedule.dto';
 import {ROOM_IS_BOOKED, SCHEDULE_NOT_FOUND} from './schedule-constants';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import {FindRoomDto} from '../room/dto/find-room.dto';
+import {FindScheduleDto} from './dto/find-schedule.dto';
 
 @Controller('schedule')
 export class ScheduleController {
@@ -28,15 +30,11 @@ export class ScheduleController {
         return deletedDocument;
     }
 
-    @Get('getAll')
-    async getAll() {
-        return this.scheduleService.getAll();
+    @Get('getAll/:limit?')
+    async getAll(@Body() conditions: FindScheduleDto, @Param('limit') limit) {
+        return this.scheduleService.getAll(conditions, limit);
     }
 
-    @Get('findById/:scheduleId')
-    async findById(@Param('scheduleId') scheduleId: string) {
-        return this.scheduleService.findById(scheduleId);
-    }
 
     @Patch(':scheduleId')
     async update(@Param('scheduleId') scheduleId: string, @Body() updateDto: UpdateScheduleDto) {
@@ -47,18 +45,4 @@ export class ScheduleController {
         return updateDoc;
     }
 
-    @Get('byRoom/:roomId')
-    async getByRoomId(@Param('roomId') roomId: string) {
-        return this.scheduleService.findByRoomID(roomId);
-    }
-
-    @Get('findRoomByDate')
-    async findRoomByDate(@Body() dto: CreateScheduleDto) {
-        return this.scheduleService.findRoomByDate(dto);
-    }
-
-    @Get('byDate/:date')
-    async getAllByDate(@Param('date') date: string) {
-        return this.scheduleService.getAllByDate(date);
-    }
 }
