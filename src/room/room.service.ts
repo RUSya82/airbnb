@@ -9,7 +9,7 @@ import {ConfigService} from '@nestjs/config';
 
 @Injectable()
 export class RoomService {
-    constructor(@InjectModel(RoomModel.name) private roomModel: Model<RoomDocument>, configService: ConfigService) {}
+    constructor(@InjectModel(RoomModel.name) private roomModel: Model<RoomDocument>, private configService: ConfigService) {}
 
 
     async createRoom(dto: CreateRoomDto): Promise<RoomModel> {
@@ -33,7 +33,7 @@ export class RoomService {
             .exec();
     }
 
-    async getAll(conditions: FindRoomDto, limit = 100): Promise<RoomModel[]> {
+    async getAll(conditions: FindRoomDto, limit = this.configService.get('MAX_FIND_LIMIT')): Promise<RoomModel[]> {
         return this.roomModel.find(conditions).limit(limit).exec();
     }
 }

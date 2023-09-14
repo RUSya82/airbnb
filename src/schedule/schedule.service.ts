@@ -5,10 +5,14 @@ import {ScheduleDocument, ScheduleModel} from './schedule.model/schedule.model';
 import {CreateScheduleDto} from './dto/create-schedule.dto';
 import {UpdateScheduleDto} from './dto/update-schedule.dto';
 import {FindScheduleDto} from './dto/find-schedule.dto';
+import {ConfigService} from '@nestjs/config';
 
 @Injectable()
 export class ScheduleService {
-    constructor(@InjectModel(ScheduleModel.name) private scheduleModel: Model<ScheduleDocument>) {}
+    constructor(
+        @InjectModel(ScheduleModel.name) private scheduleModel: Model<ScheduleDocument>,
+        private configService: ConfigService
+    ) {}
 
     async create(dto: CreateScheduleDto): Promise<ScheduleModel> {
         return this.scheduleModel.create(dto);
@@ -27,7 +31,7 @@ export class ScheduleService {
             .exec();
     }
 
-    async getAll(conditions: FindScheduleDto, limit = 100): Promise<ScheduleModel[]> {
+    async getAll(conditions: FindScheduleDto, limit = this.configService.get('MAX_FIND_LIMIT')): Promise<ScheduleModel[]> {
         return this.scheduleModel.find(conditions).limit(limit).exec();
     }
 
