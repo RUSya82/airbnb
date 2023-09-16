@@ -29,3 +29,4 @@ export class RoomModel {
 }
 
 export const RoomSchema = SchemaFactory.createForClass(RoomModel);
+RoomSchema.index({ roomFloor: 1, roomType: 1 }, { unique: true });
